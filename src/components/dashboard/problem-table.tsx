@@ -165,7 +165,7 @@ export function ProblemTable({ problems }: { problems: Problem[] }) {
                       <TableCell className="hidden md:table-cell">
                         {problem.location}
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">
+                      <TableCell suppressHydrationWarning className="hidden md:table-cell">
                         {new Date(problem.timestamp).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
