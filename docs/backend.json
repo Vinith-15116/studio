@@ -1,0 +1,115 @@
+{
+  "entities": {
+    "Problem": {
+      "title": "Problem",
+      "description": "A detected global or local problem.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the problem."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the problem."
+        },
+        "location": {
+          "type": "string",
+          "description": "The location where the problem occurred."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time when the problem was detected."
+        },
+        "severity": {
+          "type": "string",
+          "description": "The severity level of the problem."
+        },
+        "urgency": {
+          "type": "number",
+          "description": "The urgency score of the problem."
+        },
+        "sentimentScore": {
+          "type": "number",
+          "description": "The sentiment score associated with the problem."
+        },
+        "keyTrends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key trends related to the problem."
+        },
+        "summary": {
+          "type": "string",
+          "description": "A brief summary of the problem."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the problem."
+        },
+        "date": {
+          "type": "string",
+          "description": "The date of the problem for charting purposes."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who reported the problem."
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "userId",
+        "category",
+        "location",
+        "timestamp",
+        "severity",
+        "urgency",
+        "sentimentScore",
+        "keyTrends",
+        "summary",
+        "date"
+      ]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Represents a user's profile information.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "photoURL": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  },
+  "auth": {
+    "providers": [
+      "google.com",
+      "password"
+    ]
+  },
+  "firestore": {
+    "/problems/{problemId}": {
+      "schema": {
+        "$ref": "#/backend/entities/Problem"
+      },
+      "description": "Collection of all detected problems."
+    },
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/backend/entities/UserProfile"
+      },
+      "description": "Stores user profile information."
+    }
+  }
+}

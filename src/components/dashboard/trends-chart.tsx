@@ -14,8 +14,9 @@ import {
   ChartTooltipContent,
   ChartConfig,
 } from "@/components/ui/chart";
-import { problems } from "@/lib/data";
 import { useMemo } from "react";
+import type { Problem } from "@/lib/types";
+import { Skeleton } from "../ui/skeleton";
 
 const chartConfig = {
   problems: {
@@ -24,16 +25,22 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function TrendsChart() {
+export function TrendsChart({ problems, isLoading }: { problems: Problem[], isLoading: boolean }) {
   const chartData = useMemo(() => {
     const dailyCounts: { [key: string]: number } = {};
+    if (!problems) return [];
+    
     problems.forEach((p) => {
-      dailyCounts[p.date] = (dailyCounts[p.date] || 0) + 1;
+      const date = new Date(p.timestamp.toDate()).toISOString().split('T')[0];
+      dailyCounts[date] = (dailyCounts[date] || 0) + 1;
     });
+
     return Object.entries(dailyCounts)
       .map(([date, count]) => ({ date, problems: count }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, []);
+  }, [problems]);
+  
+  if (isLoading) return <Skeleton className="h-full w-full" />;
 
   return (
     <Card>

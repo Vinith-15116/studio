@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Pie, PieChart, Sector } from "recharts";
+import { Pie, PieChart } from "recharts";
+import type { Problem } from "@/lib/types";
 
 import {
   Card,
@@ -16,7 +17,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { problems } from "@/lib/data";
+import { Skeleton } from "../ui/skeleton";
+
 
 const chartConfig = {
   problems: {
@@ -44,8 +46,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function CategoryChart() {
+export function CategoryChart({ problems, isLoading }: { problems: Problem[], isLoading: boolean}) {
   const chartData = React.useMemo(() => {
+    if (!problems) return [];
     const categoryCounts = problems.reduce((acc, problem) => {
       acc[problem.category] = (acc[problem.category] || 0) + 1;
       return acc;
@@ -56,11 +59,9 @@ export function CategoryChart() {
       value: count,
       fill: `var(--color-${category.replace(" ", "-")})`,
     }));
-  }, []);
+  }, [problems]);
 
-  const totalProblems = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.value, 0);
-  }, [chartData]);
+  if (isLoading) return <Skeleton className="h-full w-full" />;
 
   return (
     <Card className="flex flex-col">

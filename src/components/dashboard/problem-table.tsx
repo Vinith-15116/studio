@@ -1,12 +1,10 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import {
   File,
   ListFilter,
   MoreHorizontal,
-  PlusCircle,
   Wrench,
   Leaf,
   ShieldAlert,
@@ -50,6 +48,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Skeleton } from "../ui/skeleton";
 
 const categoryIcons: Record<ProblemCategory, React.ElementType> = {
   Infrastructure: Wrench,
@@ -67,10 +66,12 @@ const severityVariant: Record<ProblemSeverity, "default" | "secondary" | "destru
 }
 
 
-export function ProblemTable({ problems }: { problems: Problem[] }) {
+export function ProblemTable({ problems, isLoading }: { problems: Problem[], isLoading: boolean }) {
   const [selectedProblem, setSelectedProblem] = React.useState<Problem | null>(
     null
   );
+  
+  if (isLoading) return <Skeleton className="h-96 w-full" />
 
   return (
     <>
@@ -166,7 +167,7 @@ export function ProblemTable({ problems }: { problems: Problem[] }) {
                         {problem.location}
                       </TableCell>
                       <TableCell suppressHydrationWarning className="hidden md:table-cell">
-                        {new Date(problem.timestamp).toLocaleDateString()}
+                        {new Date(problem.timestamp.toDate()).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
@@ -195,7 +196,7 @@ export function ProblemTable({ problems }: { problems: Problem[] }) {
             </CardContent>
             <CardFooter>
               <div className="text-xs text-muted-foreground">
-                Showing <strong>1-8</strong> of <strong>8</strong> problems
+                Showing <strong>1-{problems.length}</strong> of <strong>{problems.length}</strong> problems
               </div>
             </CardFooter>
           </Card>
@@ -211,7 +212,7 @@ export function ProblemTable({ problems }: { problems: Problem[] }) {
             <DialogDescription>
               {selectedProblem?.location} -{" "}
               {selectedProblem &&
-                new Date(selectedProblem.timestamp).toLocaleString()}
+                new Date(selectedProblem.timestamp.toDate()).toLocaleString()}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

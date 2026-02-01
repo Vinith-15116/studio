@@ -16,9 +16,11 @@ const AnalyzeProblemSentimentAndTrendsInputSchema = z.object({
     .describe('The description of the problem to analyze.'),
   relevantNewsArticles: z
     .string()
+    .optional()
     .describe('A list of news articles relevant to the problem.'),
   socialMediaPosts: z
     .string()
+    .optional()
     .describe('A list of social media posts related to the problem.'),
 });
 export type AnalyzeProblemSentimentAndTrendsInput = z.infer<
@@ -48,7 +50,7 @@ const AnalyzeProblemSentimentAndTrendsOutputSchema = z.object({
     ),
   keyTrends: z
     .string()
-    .describe('A summary of the key trends associated with the problem.'),
+    .describe('A summary of the key trends associated with the problem, returned as a comma-separated list.'),
 });
 export type AnalyzeProblemSentimentAndTrendsOutput = z.infer<
   typeof AnalyzeProblemSentimentAndTrendsOutputSchema
@@ -67,12 +69,14 @@ const prompt = ai.definePrompt({
   prompt: `You are an AI expert in sentiment analysis and trend detection. Analyze the following problem description, news articles, and social media posts to determine the sentiment, urgency, severity, emerging status, and key trends associated with the problem.
 
 Problem Description: {{{problemDescription}}}
-
+{{#if relevantNewsArticles}}
 Relevant News Articles: {{{relevantNewsArticles}}}
-
+{{/if}}
+{{#if socialMediaPosts}}
 Social Media Posts: {{{socialMediaPosts}}}
+{{/if}}
 
-Provide the sentiment score, urgency score, severity score, emerging status, and key trends in the output. The sentiment score should be on a scale of -1 to 1, urgency and severity scores should be on a scale of 1 to 10. The emerging status can be "emerging", "stable", or "declining". The key trends should be a short summary of the main trends associated with the problem.
+Provide the sentiment score, urgency score, severity score, emerging status, and key trends in the output. The sentiment score should be on a scale of -1 to 1, urgency and severity scores should be on a scale of 1 to 10. The emerging status can be "emerging", "stable", or "declining". The key trends should be a short, comma-separated list of the main trends associated with the problem.
 
 Make sure to output a json that conforms to this schema:
 {{json schema=AnalyzeProblemSentimentAndTrendsOutputSchema}}`,

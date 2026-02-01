@@ -14,7 +14,7 @@ export type Problem = {
   title: string;
   category: ProblemCategory;
   location: string;
-  timestamp: string;
+  timestamp: any;
   severity: ProblemSeverity;
   urgency: number;
   sentimentScore: number;
@@ -22,6 +22,7 @@ export type Problem = {
   summary: string;
   description: string;
   date: string; // for charting
+  userId: string;
 };
 
 export type StatCardData = {

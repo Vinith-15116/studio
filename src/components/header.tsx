@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import Image from 'next/image';
 import {
   Bell,
   Home,
@@ -9,6 +12,7 @@ import {
   ShoppingCart,
   Users,
   PanelLeft,
+  PlusCircle,
 } from "lucide-react";
 
 import {
@@ -21,13 +25,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -38,9 +35,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { GlobalPulseIcon } from "./icons";
-import Image from 'next/image';
+import { useUser } from "@/firebase/auth/use-user";
+import { useAuth } from "@/hooks/use-auth";
+import { AddProblemDialog } from "./dashboard/add-problem-dialog";
 
 export function Header() {
+  const { user } = useUser();
+  const { signOut } = useAuth();
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       <Sheet>
@@ -110,7 +112,15 @@ export function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="relative ml-auto flex-1 md:grow-0">
+      <div className="relative ml-auto flex items-center gap-4 md:grow-0">
+         <AddProblemDialog>
+            <Button size="sm" className="h-8 gap-1">
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                New Problem
+              </span>
+            </Button>
+          </AddProblemDialog>
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
@@ -126,7 +136,7 @@ export function Header() {
             className="overflow-hidden rounded-full"
           >
             <Image
-              src="https://picsum.photos/seed/1/36/36"
+              src={user?.photoURL || `https://picsum.photos/seed/${user?.uid || '1'}/36/36`}
               width={36}
               height={36}
               alt="Avatar"
@@ -136,12 +146,12 @@ export function Header() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>{user?.displayName || user?.email || 'My Account'}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </header>
