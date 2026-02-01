@@ -22,6 +22,7 @@ export type Problem = {
   summary: string;
   description: string;
   date: string; // for charting
+  archived: boolean;
   userId?: string;
 };
 

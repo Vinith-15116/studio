@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { initializeFirebase } from '@/firebase';
 import { summarizeProblem } from '@/ai/flows/summarize-problem';
 import { categorizeAndClusterProblems } from '@/ai/flows/categorize-and-cluster-problems';
@@ -50,6 +50,7 @@ export async function createProblemAction(formData: FormData) {
       keyTrends: analysisResult.keyTrends.split(',').map(s => s.trim()),
       timestamp: serverTimestamp(),
       date: new Date().toISOString().split('T')[0],
+      archived: false,
     };
     
     const collectionRef = collection(firestore, 'problems');
@@ -71,3 +72,24 @@ export async function createProblemAction(formData: FormData) {
     return { success: false, error: (error as Error).message };
   }
 }
+
+export async function toggleProblemArchiveAction(problemId: string, isArchived: boolean) {
+    const { firestore } = initializeFirebase();
+    const problemRef = doc(firestore, 'problems', problemId);
+  
+    try {
+      updateDoc(problemRef, { archived: !isArchived }).catch(async (serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: problemRef.path,
+          operation: 'update',
+          requestResourceData: { archived: !isArchived },
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
+      revalidatePath('/');
+      return { success: true };
+    } catch (error) {
+      console.error('Failed to update problem status:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  }

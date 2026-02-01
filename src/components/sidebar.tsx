@@ -24,12 +24,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { href: "#", icon: Home, label: "Dashboard" },
-  { href: "#", icon: Wrench, label: "Infrastructure" },
-  { href: "#", icon: Leaf, label: "Environment" },
-  { href: "#", icon: ShieldAlert, label: "Public Safety" },
-  { href: "#", icon: SignalHigh, label: "Cyber Threats" },
-  { href: "#", icon: Users, label: "Social Challenges" },
+  { href: "/", icon: Home, label: "Dashboard" },
+  { href: "/?category=Infrastructure", icon: Wrench, label: "Infrastructure" },
+  { href: "/?category=Environment", icon: Leaf, label: "Environment" },
+  { href: "/?category=Public-Safety", icon: ShieldAlert, label: "Public Safety" },
+  { href: "/?category=Cyber-Threat", icon: SignalHigh, label: "Cyber Threats" },
+  { href: "/?category=Social-Challenge", icon: Users, label: "Social Challenges" },
   { href: "#", icon: LineChart, label: "Analytics" },
 ];
 

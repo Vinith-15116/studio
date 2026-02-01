@@ -11,7 +11,8 @@ service cloud.firestore {
     match /problems/{problemId} {
       allow read: if true;
       allow create: if true;
-      allow update, delete: if false;
+      allow update: if true;
+      allow delete: if false;
     }
   }
 }

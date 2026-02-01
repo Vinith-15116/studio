@@ -56,6 +56,10 @@
         "userId": {
           "type": "string",
           "description": "The ID of the user who reported the problem."
+        },
+        "archived": {
+          "type": "boolean",
+          "description": "Whether the problem has been archived."
         }
       },
       "required": [
