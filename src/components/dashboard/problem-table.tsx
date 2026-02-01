@@ -196,7 +196,7 @@ export function ProblemTable({ problems, isLoading }: { problems: Problem[], isL
                     {problem.location}
                   </TableCell>
                   <TableCell suppressHydrationWarning className="hidden md:table-cell">
-                    {problem.timestamp?.toDate ? new Date(problem.timestamp.toDate()).toLocaleDateString() : "..."}
+                    {problem.timestamp && typeof problem.timestamp.toDate === 'function' ? new Date(problem.timestamp.toDate()).toLocaleDateString() : "..."}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
@@ -242,7 +242,7 @@ export function ProblemTable({ problems, isLoading }: { problems: Problem[], isL
             <DialogTitle>{selectedProblem?.title}</DialogTitle>
             <DialogDescription>
               {selectedProblem?.location}
-              {selectedProblem?.timestamp?.toDate &&
+              {selectedProblem?.timestamp && typeof selectedProblem.timestamp.toDate === 'function' &&
                 ` - ${new Date(
                   selectedProblem.timestamp.toDate()
                 ).toLocaleString()}`}
