@@ -31,8 +31,10 @@ export function TrendsChart({ problems, isLoading }: { problems: Problem[], isLo
     if (!problems) return [];
     
     problems.forEach((p) => {
-      const date = new Date(p.timestamp.toDate()).toISOString().split('T')[0];
-      dailyCounts[date] = (dailyCounts[date] || 0) + 1;
+      if (p.timestamp?.toDate) {
+        const date = new Date(p.timestamp.toDate()).toISOString().split('T')[0];
+        dailyCounts[date] = (dailyCounts[date] || 0) + 1;
+      }
     });
 
     return Object.entries(dailyCounts)

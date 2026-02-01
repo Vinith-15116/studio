@@ -23,6 +23,7 @@ export function StatsCards({ problems, isLoading }: { problems: Problem[], isLoa
     const totalProblems = problems.length;
     const urgentIssues = problems.filter(p => p.severity === 'Critical' || p.severity === 'High').length;
     const newToday = problems.filter(p => {
+        if (!p.timestamp?.toDate) return false;
         const problemDate = new Date(p.timestamp.toDate());
         const today = new Date();
         return problemDate.getDate() === today.getDate() &&

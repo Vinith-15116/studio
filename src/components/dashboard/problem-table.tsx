@@ -196,7 +196,7 @@ export function ProblemTable({ problems, isLoading }: { problems: Problem[], isL
                     {problem.location}
                   </TableCell>
                   <TableCell suppressHydrationWarning className="hidden md:table-cell">
-                    {new Date(problem.timestamp.toDate()).toLocaleDateString()}
+                    {problem.timestamp?.toDate ? new Date(problem.timestamp.toDate()).toLocaleDateString() : "..."}
                   </TableCell>
                   <TableCell>
                     <DropdownMenu>
@@ -241,9 +241,11 @@ export function ProblemTable({ problems, isLoading }: { problems: Problem[], isL
           <DialogHeader>
             <DialogTitle>{selectedProblem?.title}</DialogTitle>
             <DialogDescription>
-              {selectedProblem?.location} -{" "}
-              {selectedProblem &&
-                new Date(selectedProblem.timestamp.toDate()).toLocaleString()}
+              {selectedProblem?.location}
+              {selectedProblem?.timestamp?.toDate &&
+                ` - ${new Date(
+                  selectedProblem.timestamp.toDate()
+                ).toLocaleString()}`}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
