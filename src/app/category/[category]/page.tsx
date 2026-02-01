@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 import { collection, query, where } from "firebase/firestore";
 import { useCollection } from "@/firebase/firestore/use-collection";
 import { useFirestore } from "@/firebase";
@@ -19,9 +20,10 @@ function unslugify(slug: string) {
   return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
+export default function CategoryPage() {
   const firestore = useFirestore();
   const [searchQuery, setSearchQuery] = React.useState('');
+  const params = useParams<{ category: string }>();
   const { category } = params;
   
   const categoryName = React.useMemo(() => unslugify(category), [category]);
