@@ -22,8 +22,9 @@ function unslugify(slug: string) {
 export default function CategoryPage({ params }: { params: { category: string } }) {
   const firestore = useFirestore();
   const [searchQuery, setSearchQuery] = React.useState('');
+  const { category } = params;
   
-  const categoryName = React.useMemo(() => unslugify(params.category), [params.category]);
+  const categoryName = React.useMemo(() => unslugify(category), [category]);
 
   const problemsQuery = React.useMemo(() => {
     if (!firestore || !categoryName) return null;
