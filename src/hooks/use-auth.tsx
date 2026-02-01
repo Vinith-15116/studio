@@ -1,57 +1,27 @@
 'use client';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  signOut as firebaseSignOut,
-} from 'firebase/auth';
-import { useAuth as useFirebaseAuth } from '@/firebase/provider';
 import { useToast } from './use-toast';
 
 export function useAuth() {
-  const auth = useFirebaseAuth();
   const { toast } = useToast();
 
   const signUp = async (email: string, pass: string) => {
-    if (!auth) throw new Error('Firebase Auth not available');
-    try {
-      return await createUserWithEmailAndPassword(auth, email, pass);
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: 'Sign up failed', description: error.message });
-      throw error;
-    }
+    console.warn('Sign up has been disabled.');
+    toast({ variant: 'destructive', title: 'Feature disabled', description: 'User sign up is not available.' });
   };
 
   const signIn = async (email: string, pass: string) => {
-    if (!auth) throw new Error('Firebase Auth not available');
-    try {
-      return await signInWithEmailAndPassword(auth, email, pass);
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: 'Sign in failed', description: error.message });
-      throw error;
-    }
+    console.warn('Sign in has been disabled.');
+    toast({ variant: 'destructive', title: 'Feature disabled', description: 'User sign in is not available.' });
   };
 
   const signInWithGoogle = async () => {
-    if (!auth) throw new Error('Firebase Auth not available');
-    const provider = new GoogleAuthProvider();
-    try {
-      return await signInWithPopup(auth, provider);
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: 'Google sign in failed', description: error.message });
-      throw error;
-    }
+    console.warn('Google sign in has been disabled.');
+    toast({ variant: 'destructive', title: 'Feature disabled', description: 'User sign in is not available.' });
   };
 
   const signOut = async () => {
-    if (!auth) throw new Error('Firebase Auth not available');
-    try {
-      await firebaseSignOut(auth);
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: 'Sign out failed', description: error.message });
-      throw error;
-    }
+    console.warn('Sign out has been disabled.');
+    toast({ variant: 'destructive', title: 'Feature disabled', description: 'User sign out is not available.' });
   };
 
   return { signUp, signIn, signInWithGoogle, signOut };

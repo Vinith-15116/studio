@@ -1,10 +1,8 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
-import { collection, query, where } from "firebase/firestore";
+import { collection, query } from "firebase/firestore";
 
-import { useUser } from "@/firebase/auth/use-user";
 import { useCollection } from "@/firebase/firestore/use-collection";
 import { useFirestore } from "@/firebase";
 
@@ -17,24 +15,16 @@ import { ProblemTable } from "@/components/dashboard/problem-table";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
-  const { user, loading: userLoading } = useUser();
-  const router = useRouter();
   const firestore = useFirestore();
 
   const problemsQuery = React.useMemo(() => {
-    if (!user || !firestore) return null;
-    return query(collection(firestore, "problems"), where("userId", "==", user.uid));
-  }, [firestore, user]);
+    if (!firestore) return null;
+    return query(collection(firestore, "problems"));
+  }, [firestore]);
 
   const { data: problems, loading: problemsLoading } = useCollection(problemsQuery);
 
-  React.useEffect(() => {
-    if (!user && !userLoading) {
-      router.push("/login");
-    }
-  }, [user, userLoading, router]);
-
-  if (userLoading || !user) {
+  if (problemsLoading) {
     return (
        <div className="flex min-h-screen w-full flex-col bg-background">
         <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">

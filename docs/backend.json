@@ -61,7 +61,6 @@
       "required": [
         "title",
         "description",
-        "userId",
         "category",
         "location",
         "timestamp",

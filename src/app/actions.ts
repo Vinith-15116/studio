@@ -11,13 +11,8 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
 export async function createProblemAction(formData: FormData) {
-  const { firestore, auth } = initializeFirebase();
-  const user = auth.currentUser;
+  const { firestore } = initializeFirebase();
   
-  if (!user) {
-    throw new Error('You must be logged in to create a problem.');
-  }
-
   const description = formData.get('description') as string;
   const title = formData.get('title') as string;
   const location = formData.get('location') as string;
@@ -43,7 +38,7 @@ export async function createProblemAction(formData: FormData) {
     const severity = analysisResult.severityScore > 8 ? "Critical" : analysisResult.severityScore > 6 ? "High" : analysisResult.severityScore > 3 ? "Medium" : "Low";
 
 
-    const newProblem: Omit<Problem, 'id'> = {
+    const newProblem: Omit<Problem, 'id' | 'userId'> = {
       title,
       description,
       location,
@@ -55,7 +50,6 @@ export async function createProblemAction(formData: FormData) {
       keyTrends: analysisResult.keyTrends.split(',').map(s => s.trim()),
       timestamp: serverTimestamp(),
       date: new Date().toISOString().split('T')[0],
-      userId: user.uid,
     };
     
     const collectionRef = collection(firestore, 'problems');
