@@ -25,11 +25,11 @@ import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/", icon: Home, label: "Dashboard" },
-  { href: "/?category=Infrastructure", icon: Wrench, label: "Infrastructure" },
-  { href: "/?category=Environment", icon: Leaf, label: "Environment" },
-  { href: "/?category=Public-Safety", icon: ShieldAlert, label: "Public Safety" },
-  { href: "/?category=Cyber-Threat", icon: SignalHigh, label: "Cyber Threats" },
-  { href: "/?category=Social-Challenge", icon: Users, label: "Social Challenges" },
+  { href: "/category/infrastructure", icon: Wrench, label: "Infrastructure" },
+  { href: "/category/environment", icon: Leaf, label: "Environment" },
+  { href: "/category/public-safety", icon: ShieldAlert, label: "Public Safety" },
+  { href: "/category/cyber-threat", icon: SignalHigh, label: "Cyber Threat" },
+  { href: "/category/social-challenge", icon: Users, label: "Social Challenge" },
   { href: "#", icon: LineChart, label: "Analytics" },
 ];
 

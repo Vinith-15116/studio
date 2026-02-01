@@ -1,11 +1,9 @@
 "use client";
 
 import React from "react";
-import { collection, query } from "firebase/firestore";
-
+import { collection, query, where } from "firebase/firestore";
 import { useCollection } from "@/firebase/firestore/use-collection";
 import { useFirestore } from "@/firebase";
-
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
 import { StatsCards } from "@/components/dashboard/stats-cards";
@@ -16,17 +14,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Problem } from "@/lib/types";
 import { sampleProblems } from "@/lib/sample-data";
 
-export default function DashboardPage() {
+function unslugify(slug: string) {
+  const words = slug.split('-');
+  return words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}
+
+export default function CategoryPage({ params }: { params: { category: string } }) {
   const firestore = useFirestore();
   const [searchQuery, setSearchQuery] = React.useState('');
+  
+  const categoryName = React.useMemo(() => unslugify(params.category), [params.category]);
 
   const problemsQuery = React.useMemo(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, "problems"));
-  }, [firestore]);
+    if (!firestore || !categoryName) return null;
+    return query(collection(firestore, "problems"), where("category", "==", categoryName));
+  }, [firestore, categoryName]);
 
   const { data: problemsFromDB, loading: problemsLoading } = useCollection<Problem>(problemsQuery);
-  
+
   const allProblems = React.useMemo(() => {
     const staticProblems = sampleProblems.map((p, i) => ({
       ...p,
@@ -34,22 +39,19 @@ export default function DashboardPage() {
       timestamp: {
         toDate: () => new Date(p.date),
       },
-    } as Problem));
+    } as Problem)).filter(p => p.category === categoryName);
 
     if (!problemsFromDB) {
-      return staticProblems;
+        return staticProblems;
     }
 
     const combined = [...staticProblems, ...problemsFromDB];
-    // Simple deduplication based on ID. Firestore IDs will be unique. Sample data has unique mock IDs.
     const uniqueProblems = Array.from(new Map(combined.map(p => [p.id, p])).values());
     return uniqueProblems;
-  }, [problemsFromDB]);
+  }, [problemsFromDB, categoryName]);
 
 
   const filteredProblems = React.useMemo(() => {
-    if (!allProblems) return [];
-    
     let filtered = allProblems;
 
     if (searchQuery) {
@@ -62,7 +64,6 @@ export default function DashboardPage() {
 
     return filtered;
   }, [allProblems, searchQuery]);
-
 
   if (problemsLoading) {
     return (
@@ -101,7 +102,7 @@ export default function DashboardPage() {
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Sidebar />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <Header onSearch={setSearchQuery} />
+        <Header onSearch={setSearchQuery} category={categoryName} />
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <StatsCards problems={filteredProblems || []} isLoading={problemsLoading} />
